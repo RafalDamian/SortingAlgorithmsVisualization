@@ -1,5 +1,3 @@
-from list_generator import list_generator
-
 def bubble_sort(alist):
     '''bubble sort action generator'''
     for i in range(len(alist), 1, -1):
@@ -9,6 +7,8 @@ def bubble_sort(alist):
                 yield alist
 
 if __name__ == "__main__":
+
+    from list_generator import list_generator
     
     bubble_gen = bubble_sort(list_generator())
     

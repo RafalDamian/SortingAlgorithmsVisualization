@@ -1,5 +1,3 @@
-from list_generator import list_generator
-
 def insertion_sort(alist):
     '''insertion sort action generator'''
     for i in range(1, len(alist)):
@@ -11,6 +9,8 @@ def insertion_sort(alist):
                 break
 
 if __name__ == "__main__":
+
+    from list_generator import list_generator
     
     insertion_gen = insertion_sort(list_generator())
     
