@@ -1,9 +1,12 @@
 import pygame
 from pygame.constants import MOUSEBUTTONDOWN
+from random import randint
+from time import sleep
 
 from Algorithms.list_generator import list_generator
 from Algorithms.bubble_sort import bubble_sort
 from Algorithms.insertion_sort import insertion_sort
+
 
 
 
@@ -21,11 +24,23 @@ class AlgorithmsVisualization:
         self.button_color = (0,0,255)
         self.text_color = (0,0,0)
         self.colums_color = (0,255,0)
+        self.plus_color = (0,255,0)
+        self.minus_color = (255,0,0)
 
         self.running = True
+        self.sorting = False
+        self.click = False
+        
+        self.algorithm = None
+        self.number_of_colums = 10
+        self.min_colums = 1
+        self.max_colums = 25
+        self.min_colums_h = 1
+        self.max_colums_h = 99
+        self.colums = list_generator(self.number_of_colums, self.min_colums_h, self.max_colums_h)
 
     def run_program(self):
-        """ main game loop initialization (opens main manu)"""
+        ''' main game loop initialization (opens main manu)'''
         x = self.screen_width / 2
         y = self.screen_height
         while self.running:
@@ -41,13 +56,15 @@ class AlgorithmsVisualization:
 
             if button_bubble.collidepoint((mx, my)):
                 if self.click:
-                    self.game_running = True
-                    self._create_colums('bubble')
+                    self.sorting = True
+                    self.algorithm = bubble_sort
+                    self._create_colums()
             
             if button_insertion.collidepoint((mx, my)):
                 if self.click:
-                    self.game_running = True
-                    self._create_colums('insertion')
+                    self.sorting = True
+                    self.algorithm = insertion_sort
+                    self._create_colums()
 
             if button_exit.collidepoint((mx, my)):
                 if self.click:
@@ -61,7 +78,125 @@ class AlgorithmsVisualization:
         pygame.quit()
         exit()
 
+    def _create_colums(self):
+        '''creating of colums that will be sorted by height'''
+        x = self.screen_width / 2
+        y = self.screen_height
+        while self.sorting:
+            (mx, my) = pygame.mouse.get_pos()
 
+            self.screen.fill(self.bg_color)
+
+            self._draw_text('CREATE COLUMS TO SORT BY THEIR HEIGHT', 60, self.text_color, x, y*0.15)
+
+            self._draw_all_colums(self.colums)
+        
+            button_add_column = pygame.Rect((1.02*x, y*0.70), (0.15*x, 0.15*x))
+            button_delete_column = pygame.Rect((0.83*x, y*0.70), (0.15*x, 0.15*x))
+            self._draw_button(button_add_column, self.bg_color, '+', 190, self.plus_color)
+            self._draw_button(button_delete_column, self.bg_color, '-', 190, self.minus_color)
+            self._draw_button_circuit(button_add_column, self.plus_color)
+            self._draw_button_circuit(button_delete_column, self.minus_color)
+            button_randomize = pygame.Rect((0.8*x, y*0.85), (0.4*x, 0.1*y))
+            self._draw_button(button_randomize, self.button_color, 'RANDOMIZE HEIGHT', 40, self.text_color)
+
+            if button_add_column.collidepoint((mx, my)):
+                if self.click and len(self.colums) < self.max_colums:
+                    self.number_of_colums += 1
+                    self.max_colums_h = self.number_of_colums * 2
+                    self.colums.append(randint(self.min_colums_h,self.max_colums_h))
+                    
+
+            if button_delete_column.collidepoint((mx, my)):
+                if self.click and len(self.colums) > self.min_colums:
+                    self.number_of_colums -= 1
+                    self.colums =  self.colums[:-1]
+                    self.max_colums_h = self.number_of_colums * 2
+
+            if button_randomize.collidepoint((mx, my)):
+                if self.click:
+                    self.colums = list_generator(len(self.colums), self.min_colums_h, self.max_colums_h)
+
+            button_menu = pygame.Rect((0.1*x, y*0.8), (0.4*x, 0.1*y))
+            button_sort = pygame.Rect((1.5*x, y*0.8), (0.4*x, 0.1*y))
+            self._draw_button(button_menu, self.button_color, 'BACK TO MENU', 40, self.text_color)
+            self._draw_button(button_sort, self.button_color, 'SORT THEM!', 40, self.text_color)
+
+            if button_menu.collidepoint((mx, my)):
+                if self.click:
+                    self.sorting = False
+
+            if button_sort.collidepoint((mx, my)):
+                if self.click:
+                    self._sort()
+
+
+
+            self._check_events()
+
+            pygame.display.update()
+
+    def _sort(self):
+        '''sorting algorithm visualization'''
+
+        x = self.screen_width / 2
+        y = self.screen_height
+        to_sort = self.colums.copy()
+        while self.sorting:
+
+            (mx, my) = pygame.mouse.get_pos()
+
+            self.screen.fill(self.bg_color)
+
+            self._draw_text(f'SORTIG USING: SORT', 60, self.text_color, x, y*0.15)
+
+            self._draw_all_colums(to_sort)
+
+            button_menu = pygame.Rect((0.1*x, y*0.8), (0.4*x, 0.1*y))
+            self._draw_button(button_menu, self.button_color, 'BACK TO MENU', 40, self.text_color)
+            
+            if button_menu.collidepoint((mx, my)):
+                if self.click:
+                    self.sorting = False
+
+            button_next = pygame.Rect((1.5*x, y*0.8), (0.4*x, 0.1*y))
+            self._draw_button(button_next, self.button_color, 'NEXT', 40, self.text_color)
+        
+
+            if button_next.collidepoint((mx, my)):
+                if self.click:
+                    try:
+                        next(self.algorithm(to_sort))
+                    except StopIteration:
+                        self._after_sorting(to_sort)
+
+            self._check_events()
+            pygame.display.update()
+
+    def _after_sorting(self, to_sort):
+        '''sorting algorithm visualization'''
+        x = self.screen_width / 2
+        y = self.screen_height
+        while self.sorting:
+
+            (mx, my) = pygame.mouse.get_pos()
+
+            self.screen.fill(self.bg_color)
+
+            self._draw_text(f'SORTIG COMPLETED USING: SORT', 60, self.text_color, x, y*0.15)
+
+            self._draw_all_colums(to_sort)
+
+            button_menu = pygame.Rect((0.1*x, y*0.8), (0.4*x, 0.1*y))
+            self._draw_button(button_menu, self.button_color, 'BACK TO MENU', 40, self.text_color)
+            
+            if button_menu.collidepoint((mx, my)):
+                if self.click:
+                    self.sorting = False
+
+            self._check_events()
+            pygame.display.update()
+        
     
     def _check_events(self):
         '''reaction to events generated by the keyboard and mouse inside menu'''
@@ -90,6 +225,20 @@ class AlgorithmsVisualization:
     def _draw_button_circuit(self, button, color):
         '''draws circuit of given button'''
         pygame.draw.rect(self.screen, color, button, 2, 8)
+
+    def _draw_all_colums(self, colums):
+        column_width = self.screen_width / 61
+        starting_point = 30 * (column_width - len(colums) +1)
+        for index, column in enumerate(colums):
+            h = column*(0.50*self.screen_height)/100
+            y = 0.65*self.screen_height-h
+            x = starting_point+2*index*column_width
+            self._draw_column(x, y, column_width, h, self.colums_color, str(column))
+
+    def _draw_column(self, x, y, w, h, color, text=None):
+        pygame.draw.rect(self.screen, color, pygame.Rect((x, y), (w, h)))
+        if text:
+            self._draw_text(text, 60, self.text_color, x+w*0.5, 0.67*self.screen_height)
 
 if __name__ == '__main__':
     visual = AlgorithmsVisualization()

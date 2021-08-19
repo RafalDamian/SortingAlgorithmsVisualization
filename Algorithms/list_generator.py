@@ -1,4 +1,4 @@
-from random import randrange
+from random import randint
 
-def list_generator(n=10, min=-10, max=10):
-    return [randrange(min, max) for _ in range(n)]
+def list_generator(n=10, min=1, max=10):
+    return [randint(min, max) for _ in range(n)]
