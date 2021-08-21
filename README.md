@@ -7,7 +7,7 @@ This project visualize operating of three sorting algoritms:
 
 ![](images/menu.png)
 
-User can create a list that consists up to 800 elements that are inteegers represented by colums with height proportional to their values. The number of columns can be dynamically changed by entering a new value in the box, or increasing/decreasing it using the +/- signs. 
+User can create a list that consists up to 800 elements that are integers represented by colums with height proportional to their values. The number of columns can be dynamically changed by entering a new value in the box, or increasing/decreasing it using the +/- signs. 
 If the user is not satisfied with the distribution of the column heights, he may draw new ones. The width of the columns scales with their number so that they occupy 95% of the screen width.
 The list is then sorted using the selected algorithm. 
 
