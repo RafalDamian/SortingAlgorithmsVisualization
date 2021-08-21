@@ -76,7 +76,7 @@ Function yields the subsequent operations performed on the list, after each such
                 except StopIteration:
                     sorted = True
 ```
-Due to this actions we end up with a smooth simulation.
+Due to these actions we end up with a smooth simulation.
 ![](images/bubble.png)
 
 Importantly, the selected column configuration is remembered and can be sorted once again using a different algorithm. This and the fact that you can sort both small and relatively large amounts of data makes it easy to see the difference in the time of sorting different data sets with different algorithms.
