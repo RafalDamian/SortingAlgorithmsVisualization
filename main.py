@@ -7,6 +7,7 @@ from Algorithms.list_generator import list_generator
 from Algorithms.bubble_sort import bubble_sort
 from Algorithms.insertion_sort import insertion_sort
 from Algorithms.merge_sort import merge_sort
+from settings import Settings
 
 
 class AlgorithmsVisualization:
@@ -19,28 +20,19 @@ class AlgorithmsVisualization:
         self.screen_width = self.screen.get_rect().width
         self.screen_height = self.screen.get_rect().height
 
-        self.bg_color = (0,0,0)
-        self.button_color = (0,0,255)
-        self.text_color = (255,255,255)
-        self.colums_color = (235, 107, 52)
-        self.plus_color = (0,255,0)
-        self.minus_color = (255,0,0)
-
         self.running = True
         self.sorting = False
         self.click = False
         self.action = False
         self.typing = False
         self.temporary_number_of_colums = None
+
+        self.settings = Settings()
         
         self.algorithm = None
         self.algorithm_name = None
         self.number_of_colums = 100
-        self.min_colums = 1
-        self.max_colums = 800
-        self.min_colums_h = 1
-        self.max_colums_h = 1000
-        self.colums = list_generator(self.number_of_colums, self.min_colums_h, self.max_colums_h)
+        self.colums = list_generator(self.number_of_colums, self.settings.min_colums_h, self.settings.max_colums_h)
 
     def run_program(self):
         ''' main game loop initialization (opens main manu)'''
@@ -48,16 +40,16 @@ class AlgorithmsVisualization:
         y = self.screen_height
         while self.running:
             (mx, my) = pygame.mouse.get_pos()
-            self.screen.fill(self.bg_color)
-            self._draw_text('CHOOSE ALGORITHM', 60, self.text_color, x, y*0.2)
-            button_bubble = pygame.Rect((0.8*x, y*0.3), (0.4*x, 0.1*y))
-            button_insertion = pygame.Rect((0.8*x, y*0.5), (0.4*x, 0.1*y))
-            button_merge = pygame.Rect((0.8*x, y*0.7), (0.4*x, 0.1*y))
+            self.screen.fill(self.settings.bg_color)
+            self._draw_text('CHOOSE AN ALGORITHM', 60, self.settings.text_color, x, y*0.20)
+            button_bubble = pygame.Rect((0.8*x, y*0.25), (0.4*x, 0.1*y))
+            button_insertion = pygame.Rect((0.8*x, y*0.4), (0.4*x, 0.1*y))
+            button_merge = pygame.Rect((0.8*x, y*0.55), (0.4*x, 0.1*y))
             button_exit = pygame.Rect((0.1*x, y*0.8), (0.4*x, 0.1*y))
-            self._draw_button(button_bubble, self.button_color, 'BUBBLE SORT', 40, self.text_color)
-            self._draw_button(button_insertion, self.button_color, 'INSERTION SORT', 40, self.text_color)
-            self._draw_button(button_merge, self.button_color, 'MERGE SORT', 40, self.text_color)
-            self._draw_button(button_exit, self.button_color, 'EXIT', 40, self.text_color)
+            self._draw_button(button_bubble, self.settings.button_color, 'BUBBLE SORT', 40, self.settings.text_color)
+            self._draw_button(button_insertion, self.settings.button_color, 'INSERTION SORT', 40, self.settings.text_color)
+            self._draw_button(button_merge, self.settings.button_color, 'MERGE SORT', 40, self.settings.text_color)
+            self._draw_button(button_exit, self.settings.button_color, 'EXIT', 40, self.settings.text_color)
 
             if button_bubble.collidepoint((mx, my)):
                 if self.click:
@@ -97,7 +89,7 @@ class AlgorithmsVisualization:
         y = self.screen_height
         while self.sorting:
             (mx, my) = pygame.mouse.get_pos()
-            self.screen.fill(self.bg_color)
+            self.screen.fill(self.settings.bg_color)
 
             if self.typing:
                 self._change_number_of_colums(self.temporary_number_of_colums)
@@ -105,32 +97,32 @@ class AlgorithmsVisualization:
         
             button_add_column = pygame.Rect((1.15*x, y*0.78), (0.15*x, 0.15*x))
             button_delete_column = pygame.Rect((0.70*x, y*0.78), (0.15*x, 0.15*x))
-            self._draw_button(button_add_column, self.bg_color, '+', 190, self.plus_color)
-            self._draw_button(button_delete_column, self.bg_color, '-', 190, self.minus_color)
-            self._draw_button_circuit(button_add_column, self.plus_color)
-            self._draw_button_circuit(button_delete_column, self.minus_color)
+            self._draw_button(button_add_column, self.settings.bg_color, '+', 190, self.settings.plus_color)
+            self._draw_button(button_delete_column, self.settings.bg_color, '-', 190, self.settings.minus_color)
+            self._draw_button_circuit(button_add_column, self.settings.plus_color)
+            self._draw_button_circuit(button_delete_column, self.settings.minus_color)
             button_randomize = pygame.Rect((0.87*x, y*0.79+0.075*x), (0.26*x, 0.070*x))
-            self._draw_button(button_randomize, self.button_color, 'RANDOMIZE HEIGHT', 30, self.text_color)
+            self._draw_button(button_randomize, self.settings.button_color, 'RANDOMIZE HEIGHT', 30, self.settings.text_color)
             button_number_of_colums = pygame.Rect((0.87*x, y*0.78), (0.26*x, 0.075*x))
             if not self.typing:
-                self._draw_button(button_number_of_colums, self.bg_color, f'{self.number_of_colums}', 100, self.text_color)
+                self._draw_button(button_number_of_colums, self.settings.bg_color, f'{self.number_of_colums}', 100, self.settings.text_color)
             else:
-                self._draw_button(button_number_of_colums, self.bg_color, f'{self.temporary_number_of_colums}', 100, self.text_color)
-            self._draw_button_circuit(button_number_of_colums, self.text_color)
+                self._draw_button(button_number_of_colums, self.settings.bg_color, f'{self.temporary_number_of_colums}', 100, self.settings.text_color)
+            self._draw_button_circuit(button_number_of_colums, self.settings.text_color)
 
             if button_add_column.collidepoint((mx, my)):
-                if self.click and len(self.colums) < self.max_colums:
+                if self.click and len(self.colums) < self.settings.max_colums:
                     self.number_of_colums += 1
-                    self.colums.append(randint(self.min_colums_h,self.max_colums_h))
+                    self.colums.append(randint(self.settings.min_colums_h,self.settings.max_colums_h))
                     
             if button_delete_column.collidepoint((mx, my)):
-                if self.click and len(self.colums) > self.min_colums:
+                if self.click and len(self.colums) > self.settings.min_colums:
                     self.number_of_colums -= 1
                     self.colums =  self.colums[:-1]
 
             if button_randomize.collidepoint((mx, my)):
                 if self.click:
-                    self.colums = list_generator(len(self.colums), self.min_colums_h, self.max_colums_h)
+                    self.colums = list_generator(len(self.colums), self.settings.min_colums_h, self.settings.max_colums_h)
 
             if button_number_of_colums.collidepoint((mx, my)):
                 if self.click:
@@ -139,8 +131,8 @@ class AlgorithmsVisualization:
 
             button_menu = pygame.Rect((0.1*x, y*0.8), (0.4*x, 0.1*y))
             button_sort = pygame.Rect((1.5*x, y*0.8), (0.4*x, 0.1*y))
-            self._draw_button(button_menu, self.button_color, 'BACK TO MENU', 40, self.text_color)
-            self._draw_button(button_sort, self.button_color, 'SORT THEM!', 40, self.text_color)
+            self._draw_button(button_menu, self.settings.button_color, 'BACK TO MENU', 40, self.settings.text_color)
+            self._draw_button(button_sort, self.settings.button_color, 'SORT THEM!', 40, self.settings.text_color)
 
             if button_menu.collidepoint((mx, my)):
                 if self.click:
@@ -150,7 +142,7 @@ class AlgorithmsVisualization:
                 if self.click:
                     self._sort()
 
-            self._draw_text('CREATE COLUMS TO SORT BY THEIR HEIGHT', 60, self.text_color, x, y*0.15)
+            self._draw_text('CREATE COLUMS TO SORT BY THEIR HEIGHT', 60, self.settings.text_color, x, y*0.15)
             self._draw_all_colums(self.colums)
             self._check_events()
             pygame.display.update()
@@ -164,7 +156,7 @@ class AlgorithmsVisualization:
         self.algorithm = self.algorithm(to_sort)
         while self.sorting:
             (mx, my) = pygame.mouse.get_pos()
-            self.screen.fill(self.bg_color)
+            self.screen.fill(self.settings.bg_color)
 
             if not sorted:
                 try:
@@ -177,13 +169,13 @@ class AlgorithmsVisualization:
                 header= f'SORTIG COMPLETED USING: {self.algorithm_name.upper()}'
 
             button_menu = pygame.Rect((0.1*x, y*0.8), (0.4*x, 0.1*y))
-            self._draw_button(button_menu, self.button_color, 'BACK TO MENU', 40, self.text_color)
+            self._draw_button(button_menu, self.settings.button_color, 'BACK TO MENU', 40, self.settings.text_color)
             if button_menu.collidepoint((mx, my)):
                 if self.click:
                     self.sorting = False
 
             self._draw_all_colums(to_sort)
-            self._draw_text(header, 60, self.text_color, x, y*0.15)
+            self._draw_text(header, 60, self.settings.text_color, x, y*0.15)
             self._check_events()
             pygame.display.update()
 
@@ -219,15 +211,15 @@ class AlgorithmsVisualization:
         column_width = 0.95 * self.screen_width / (2 * self.number_of_colums + 1)
         starting_point = column_width + 0.025 * self.screen_width
         for index, column in enumerate(colums):
-            h = column * 0.50 * self.screen_height / self.max_colums_h
+            h = column * 0.50 * self.screen_height / self.settings.max_colums_h
             y = 0.68 * self.screen_height - h
             x = starting_point + 2 * index * column_width
-            self._draw_column(x, y, column_width, h, self.colums_color)
+            self._draw_column(x, y, column_width, h, self.settings.colums_color)
 
     def _draw_column(self, x, y, w, h, color, text=None):
         pygame.draw.rect(self.screen, color, pygame.Rect((x, y), (w, h)))
         if text:
-            self._draw_text(text, 20, self.text_color, x+w*0.5, 0.67*self.screen_height)
+            self._draw_text(text, 20, self.settings.text_color, x+w*0.5, 0.67*self.screen_height)
 
     def _change_number_of_colums(self, number):
         '''changes number of colums'''
@@ -256,20 +248,19 @@ class AlgorithmsVisualization:
         if not self.typing:
             try:
                 colums = int(self.temporary_number_of_colums)
-                if colums < self.min_colums:
-                    colums = self.min_colums
-                elif colums > self.max_colums:
-                    colums = self.max_colums
+                if colums < self.settings.min_colums:
+                    colums = self.settings.min_colums
+                elif colums > self.settings.max_colums:
+                    colums = self.settings.max_colums
                 if colums < self.number_of_colums:
                     self.colums = self.colums[:colums]
                     self.number_of_colums = colums
                 else:
                     for _ in range(colums-self.number_of_colums):
-                        self.colums.append(randint(self.min_colums_h, self.max_colums_h))
+                        self.colums.append(randint(self.settings.min_colums_h, self.settings.max_colums_h))
                     self.number_of_colums = colums
             except ValueError:
                 pass
-
 
 
 if __name__ == '__main__':
