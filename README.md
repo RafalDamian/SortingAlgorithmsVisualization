@@ -26,7 +26,7 @@ def bubble_sort(alist):
 Merge sort uses recursion, therefore changing it into the generator is more complicated:
 ```python
 def merge_sort(alist):
-
+    '''merge sort action generator'''
     def ms_rec(start, end):
         if end - start > 1:
             mid = (start + end) // 2
@@ -67,7 +67,7 @@ def merge_sort(alist):
 
     yield from ms_rec(0, len(alist))
 ```
-Function yields the subsequent operations performed on the list, after each such operation the program pauses for a moment, thanks to the sleep () function from the time module. This time is inversely proportional to the length of the list.
+Function yields the subsequent operations performed on the list, after each such operation the program pauses for a moment, using the sleep() function from the time module. This time is inversely proportional to the length of the list.
 ```python
             if not sorted:
                 try:
@@ -76,7 +76,7 @@ Function yields the subsequent operations performed on the list, after each such
                 except StopIteration:
                     sorted = True
 ```
-
+Due to this actions we end up with a smooth simulation.
 ![](images/bubble.png)
 
 Importantly, the selected column configuration is remembered and can be sorted once again using a different algorithm. This and the fact that you can sort both small and relatively large amounts of data makes it easy to see the difference in the time of sorting different data sets with different algorithms.
